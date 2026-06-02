@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wortwechsel Labor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="setup-panel" id="setupPanel">
+        <div class="setup-copy">
+          <p class="eyebrow">Mehrspieler Schreibtraining</p>
+          <h1>Wortwechsel Labor</h1>
+          <p>Wähle Niveau, Spielerzahl und Namen. Danach spielt ihr reihum: Jede Person bekommt eine eigene Aufgabe und sammelt Punkte.</p>
+        </div>
+        <div class="setup-form">
+          <label for="playerCount">Spielerzahl</label>
+          <select id="playerCount">
+            <option value="1">1 Spieler</option>
+            <option value="2">2 Spieler</option>
+            <option value="3">3 Spieler</option>
+            <option value="4">4 Spieler</option>
+            <option value="5">5 Spieler</option>
+            <option value="6">6 Spieler</option>
+          </select>
+          <div id="playerNameFields" class="player-name-fields"></div>
+          <label for="roundCount">Runden pro Spieler</label>
+          <select id="roundCount">
+            <option value="6">6 Runden</option>
+            <option value="8" selected>8 Runden</option>
+            <option value="10">10 Runden</option>
+            <option value="12">12 Runden</option>
+          </select>
+          <button class="primary" id="startGameBtn" type="button">Spiel starten</button>
+          <div class="saved-games">
+            <h2>Letzte Spiele</h2>
+            <ul id="savedGames"></ul>
+          </div>
+        </div>
+      </section>
+
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="logo-mark" aria-hidden="true">
+            <span>W</span>
+          </div>
+          <div>
+            <p class="eyebrow">Deutsch schreiben trainieren</p>
+            <h1>Wortwechsel Labor</h1>
+          </div>
+        </div>
+        <section class="scoreboard" aria-label="Punktestand">
+          <div>
+            <span>Aktueller Spieler</span>
+            <strong id="currentPlayer">Carla</strong>
+          </div>
+          <div>
+            <span>Punkte</span>
+            <strong id="score">0</strong>
+          </div>
+          <div>
+            <span>Runde</span>
+            <strong id="round">1/8</strong>
+          </div>
+          <div>
+            <span>Zeit</span>
+            <strong id="timer">00:00</strong>
+          </div>
+        </section>
+      </header>
+
+      <section class="control-strip" aria-label="Spielsteuerung">
+        <div class="segmented" role="group" aria-label="Niveau wählen">
+          <button class="level-btn is-active" data-level="A1">A1</button>
+          <button class="level-btn" data-level="A2">A2</button>
+          <button class="level-btn" data-level="B1">B1</button>
+          <button class="level-btn" data-level="B2">B2</button>
+        </div>
+        <div class="segmented mode-tabs" role="group" aria-label="Spiel wählen">
+          <button class="mode-btn is-active" data-mode="word">Wortwechsel</button>
+          <button class="mode-btn" data-mode="structure">Satzstruktur</button>
+          <button class="mode-btn" data-mode="parts">Satzteil</button>
+        </div>
+        <button class="icon-button" id="newGameBtn" type="button" title="Neues Spiel" aria-label="Neues Spiel">
+          <span aria-hidden="true">↻</span>
+        </button>
+      </section>
+
+      <section class="play-area">
+        <aside class="progress-panel" aria-label="Lernfortschritt">
+          <div class="turn-card">
+            <span>Jetzt dran</span>
+            <strong id="turnPlayer">Carla</strong>
+            <p id="turnInfo">Runde 1</p>
+          </div>
+          <div class="player-board">
+            <h2>Spieler</h2>
+            <ol id="playerBoard"></ol>
+          </div>
+          <div class="level-card">
+            <span class="level-label" id="levelLabel">A1</span>
+            <p id="levelDescription">Einfache Alltagssätze und klare Wortwahl.</p>
+          </div>
+          <div class="skill-bars" aria-label="Fähigkeiten">
+            <div>
+              <span>Wortschatz</span>
+              <div class="bar"><i id="vocabBar"></i></div>
+            </div>
+            <div>
+              <span>Struktur</span>
+              <div class="bar"><i id="structureBar"></i></div>
+            </div>
+            <div>
+              <span>Tempo</span>
+              <div class="bar"><i id="speedBar"></i></div>
+            </div>
+          </div>
+          <div class="mini-log">
+            <h2>Letzte Punkte</h2>
+            <ul id="pointLog"></ul>
+          </div>
+        </aside>
+
+        <section class="game-panel" aria-live="polite">
+          <div class="game-heading">
+            <div>
+              <p class="eyebrow" id="modeKicker">Spiel 1</p>
+              <h2 id="modeTitle">Das Wortersetzungsspiel</h2>
+            </div>
+            <span class="badge" id="targetBadge">schwaches Wort: gut</span>
+          </div>
+
+          <div class="prompt-box">
+            <p id="promptText">Das Essen ist gut.</p>
+          </div>
+
+          <div class="task-zone" id="wordTask">
+            <label for="answerInput">Schreibe stärkere oder genauere Wörter. Trenne mehrere Lösungen mit Komma.</label>
+            <textarea id="answerInput" rows="4" placeholder="z. B. lecker, ausgezeichnet, hervorragend"></textarea>
+            <div class="hint-row">
+              <button class="secondary" id="hintBtn" type="button">Vorschlag zeigen</button>
+              <span id="hintText"></span>
+            </div>
+          </div>
+
+          <div class="task-zone is-hidden" id="structureTask">
+            <label for="structureInput">Formuliere den Inhalt mit der geforderten Struktur neu.</label>
+            <textarea id="structureInput" rows="4" placeholder="Schreibe deinen neuen Satz hier..."></textarea>
+            <div class="structure-targets" id="structureTargets"></div>
+          </div>
+
+          <div class="task-zone is-hidden" id="partsTask">
+            <p class="task-label">Ordne die Satzteile. Klicke die Teile in der richtigen Reihenfolge an.</p>
+            <div class="parts-bank" id="partsBank"></div>
+            <div class="sentence-build" id="sentenceBuild" aria-label="Dein Satz"></div>
+            <button class="secondary" id="clearPartsBtn" type="button">Zurücksetzen</button>
+          </div>
+
+          <div class="action-row">
+            <button class="primary" id="checkBtn" type="button">Antwort prüfen</button>
+            <button class="ghost" id="skipBtn" type="button">Nächste Aufgabe</button>
+          </div>
+
+          <section class="feedback" id="feedback" aria-live="polite">
+            <h3>Feedback</h3>
+            <p>Starte mit deiner Antwort. Am Ende bekommst du eine Fehler-Zusammenfassung.</p>
+          </section>
+        </section>
+      </section>
+
+      <section class="summary-panel is-hidden" id="summaryPanel" aria-live="polite">
+        <div>
+          <p class="eyebrow">Spielende</p>
+          <h2>Ranking und KI-Zusammenfassung</h2>
+        </div>
+        <div id="summaryContent"></div>
+        <button class="primary" id="restartBtn" type="button">Noch einmal spielen</button>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
